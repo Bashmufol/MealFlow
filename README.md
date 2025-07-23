@@ -1,6 +1,6 @@
 # MealFlow 🍽️
 
-A full-stack, role-based web application designed to modernize and streamline the corporate canteen ordering process. Employees can pre-order meals to save time, and canteen staff can efficiently manage menus and incoming orders through a dedicated admin dashboard.
+A full-stack, role-based web application designed to modernize and streamline the corporate canteen ordering process. It allows company employees to pre-order their meals from the office canteen and allows canteen staff to manage the menu and orders. Employees can pre-order meals to save time, and canteen staff can efficiently manage menus and incoming orders through a dedicated admin dashboard.
 
 **Live Demo:** [**canteen-connect.herokuapp.com**](https://[your-live-app-url]) 
 
