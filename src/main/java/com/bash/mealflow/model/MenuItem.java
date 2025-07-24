@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class MenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +20,8 @@ public class MenuItem {
     private String name;
     private String description;
     private BigDecimal price;
+    @Column(name = "available_date")
     private LocalDate availableDate;
+    @Column(name = "is_available")
     private boolean isAvailable;
 }
