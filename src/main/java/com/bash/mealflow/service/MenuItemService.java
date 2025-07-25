@@ -1,5 +1,6 @@
 package com.bash.mealflow.service;
 
+import com.bash.mealflow.customException.ResourceNotFoundException;
 import com.bash.mealflow.model.MenuItem;
 import com.bash.mealflow.repository.MenuItemRespository;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,17 @@ public class MenuItemService {
             existingMenuItem.setPrice(menuItem.getPrice());
             existingMenuItem.setAvailableDate(menuItem.getAvailableDate());
             existingMenuItem.setAvailable(menuItem.isAvailable());
-        } else throw new ResourceNotFoundException
+            return menuItemRespository.save(existingMenuItem);
+        } else {
+            throw new ResourceNotFoundException("Cannot find menu item with the id: " + menuItemId);
+            }
+    }
 
+    public void deleteMenuItem(Long menuItemId) {
+        if(menuItemRespository.existsById(menuItemId)) {
+            menuItemRespository.deleteById(menuItemId);
+        } else  {
+            throw new ResourceNotFoundException("Cannot find menu item with the id: " + menuItemId);
+        }
     }
 }
