@@ -10,12 +10,12 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRepositroy userRepositroy;
+    private final UserRepositroy userRepository;
 
     public Optional<User> findByUsername(String username) {
-        return userRepositroy.findByUsername(username);
+        return userRepository.findByUsername(username);
     }
     public User saveUser(User user) {
-        return userRepositroy.save(user);
+        return userRepository.save(user);
     }
 }
