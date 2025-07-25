@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; }
+    .error-container {
+      max-width: 600px;
+      margin: 100px auto;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      background-color: #ffffff;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="error-container">
+    <h1 class="display-1 text-danger" th:text="${status}">404</h1>
+    <h2 class="mb-4" th:text="${error}">Not Found</h2>
+    <p class="lead" th:text="${errorMessage != null ? errorMessage : 'The resource you requested could not be found.'}">
+      The resource you requested could not be found.
+    </p>
+    <p class="text-muted">Path: <span th:text="${path}"></span></p>
+    <a th:href="@{/dashboard}" class="btn btn-primary mt-3">Go to Dashboard</a>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
