@@ -1,10 +1,7 @@
 package com.bash.mealflow.service;
 
 import com.bash.mealflow.customException.ResourceNotFoundException;
-import com.bash.mealflow.model.MenuItem;
-import com.bash.mealflow.model.Order;
-import com.bash.mealflow.model.OrderItem;
-import com.bash.mealflow.model.User;
+import com.bash.mealflow.model.*;
 import com.bash.mealflow.repository.MenuItemRespository;
 import com.bash.mealflow.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +12,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +29,7 @@ public class OrderService {
         Order order = new Order();
         order.setUser(user);
         order.setOrderDate(LocalDateTime.now());
-        order.setStatus("ORDERED");
+        order.setStatus(OrderStatus.ORDERED);
         BigDecimal totalAmount  = BigDecimal.ZERO;
 
         for(Map.Entry<Long, Integer> entry : itemQuantity.entrySet()) {
@@ -60,6 +59,28 @@ public class OrderService {
 
     public List<Order> getAllOrderForAdmin(){
         return orderRepository.findAllByOrderByOrderDateDesc();
+    }
+    public List<Order> getPendingOrders(){
+//        Fetch orders that are 'ORDERED' or 'IN_PROGRESS'
+        List<Order> ordered = orderRepository.findByStatusOrderByOrderDateAsc(OrderStatus.ORDERED);
+        List<Order> inProgress = orderRepository.findByStatusOrderByOrderDateAsc(OrderStatus.IN_PROGRESS);
+        ordered.addAll(inProgress);
+        return ordered.stream()
+                .sorted((o1, o2) -> o1.getOrderDate().compareTo(o2.getOrderDate()))
+                .collect(Collectors.toList());
+    }
+
+    public Order updateOrderStatus(Long orderId, OrderStatus newStatus){
+        return orderRepository.findById(orderId)
+                .map(order -> {
+                    order.setStatus(newStatus);
+                    return orderRepository.save(order);
+                }).orElseThrow(() -> new ResourceNotFoundException("Order Not Found with id: " + orderId));
+
+    }
+
+    public Optional<Order> getOrderById(Long orderId){
+        return orderRepository.findById(orderId);
     }
 
 }

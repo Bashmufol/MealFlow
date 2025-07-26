@@ -24,7 +24,8 @@ public class Order {
     private User user;
     @Column(name = "order_date")
     private LocalDateTime orderDate;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
     @OneToMany(mappedBy = "order",  cascade = CascadeType.ALL, orphanRemoval = true)
