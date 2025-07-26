@@ -1,5 +1,6 @@
 package com.bash.mealflow.service;
 
+import com.bash.mealflow.model.Role;
 import com.bash.mealflow.model.User;
 import com.bash.mealflow.repository.UserRepositroy;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,10 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
     public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+    public User registerUser(User user) {
+        user.setRoles(Role.USER);
         return userRepository.save(user);
     }
 }
