@@ -1,165 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MealFlow - Employee Dashboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .dashboard-container {
-            padding: 20px;
-        }
-        .sidebar {
-            background-color: #343a40;
-            color: white;
-            padding-top: 20px;
-            border-radius: 8px;
-        }
-        .sidebar h4 {
-            padding: 15px 20px;
-            border-bottom: 1px solid #6c757d;
-            margin-bottom: 20px;
-        }
-        .nav-item a {
-            color: white;
-            padding: 10px 20px;
-            display: block;
-            text-decoration: none;
-        }
-        .nav-item a:hover {
-            background-color: #495057;
-            border-left: 4px solid #007bff;
-        }
-        .content {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        .highlighted-item {
-            background-color: #e9ecef;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        .highlighted-item h5 {
-            color: #007bff;
-        }
-    </style>
+    <title>Employee Dashboard - MealFlow</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-<div class="container-fluid dashboard-container">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">MealFlow (Employee)</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="btn btn-link nav-link">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h1 class="mb-4">Welcome, <span sec:authentication="name">User</span>!</h1>
+
+    <div th:if="${successMessage}" class="alert alert-success" role="alert">
+        <span th:text="${successMessage}"></span>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
     <div class="row">
-        <nav class="col-md-3 col-lg-2 d-md-block sidebar">
-            <div class="sidebar-sticky">
-                <h4><i class="fas fa-utensils mr-2"></i> MealFlow</h4>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">
-                            <i class="fas fa-home mr-2"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/menu">
-                            <i class="fas fa-list mr-2"></i> Food Menu
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/orders">
-                            <i class="fas fa-history mr-2"></i> Order History
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/recommendations">
-                            <i class="fas fa-lightbulb mr-2"></i> Recommendations
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/cart">
-                            <i class="fas fa-shopping-cart mr-2"></i> Cart <span class="badge badge-primary badge-pill">3</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/profile">
-                            <i class="fas fa-user-cog mr-2"></i> Employee Details
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logout">
-                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-            <div class="content">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Welcome, <span id="employeeName">John Doe</span>!</h1>
+        <!-- Daily Menu Section -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Today's Menu</h4>
                 </div>
+                <div class="card-body">
+                    <form th:action="@{/employee/place-order}" method="post">
+                        <div th:if="${#lists.isEmpty(menuItems)}" class="alert alert-info">
+                            No menu items available for today.
+                        </div>
+                        <div th:each="item : ${menuItems}" class="mb-3 p-2 border rounded">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-0" th:text="${item.name}">Dish Name</h5>
+                                    <small class="text-muted" th:text="${item.description}">Description</small>
+                                </div>
+                                <div class="text-end">
+                                    <span class="fw-bold" th:text="${#numbers.formatCurrency(item.price)}">€10.00</span>
+                                    <input type="number" th:name="'quantity_' + ${item.id}" value="0" min="0" class="form-control form-control-sm d-inline-block ms-2" style="width: 70px;">
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${not #lists.isEmpty(menuItems)}" class="d-grid gap-2 mt-3">
+                            <button type="submit" class="btn btn-success">Place Order</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-                <div>
-                    <h4>Today's Highlight</h4>
-                    <div class="highlighted-item">
-                        <h5>Special Lunch Offer: Spicy Chicken Biryani</h5>
-                        <p>Enjoy our delicious and flavorful Spicy Chicken Biryani today for a special price of ₦1200 only!</p>
-                        <a href="/menu" class="btn btn-primary btn-sm">View Full Menu</a>
+        <!-- Order History Section -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">Your Order History</h4>
+                </div>
+                <div class="card-body">
+                    <div th:if="${#lists.isEmpty(orderHistory)}" class="alert alert-info">
+                        You haven't placed any orders yet.
                     </div>
-
-                    <h4 class="mt-4">Quick Actions</h4>
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-list fa-3x text-info mb-2"></i>
-                                    <h5>View Menu</h5>
-                                    <p class="card-text">Browse today's delicious options.</p>
-                                    <a href="/menu" class="btn btn-outline-info btn-sm">Go to Menu</a>
-                                </div>
-                            </div>
+                    <div th:each="order : ${orderHistory}" class="mb-3 p-3 border rounded">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">Order #<span th:text="${order.id}">123</span></h6>
+                            <span class="badge bg-secondary" th:text="${order.status}">ORDERED</span>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-shopping-cart fa-3x text-success mb-2"></i>
-                                    <h5>Your Cart</h5>
-                                    <p class="card-text">View and manage your current orders.</p>
-                                    <a href="/cart" class="btn btn-outline-success btn-sm">View Cart</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <i class="fas fa-history fa-3x text-warning mb-2"></i>
-                                    <h5>Order History</h5>
-                                    <p class="card-text">See your past meal orders.</p>
-                                    <a href="/orders" class="btn btn-outline-warning btn-sm">View History</a>
-                                </div>
-                            </div>
-                        </div>
+                        <small class="text-muted" th:text="${#temporals.format(order.orderDate, 'dd MMM yyyy HH:mm')}"></small>
+                        <p class="fw-bold mb-1">Total: <span th:text="${#numbers.formatCurrency(order.totalAmount)}">€0.00</span></p>
+                        <ul class="list-unstyled mb-0">
+                            <li th:each="item : ${order.orderItems}">
+                                <span th:text="${item.quantity}">2</span> x <span th:text="${item.menuItem.name}">Item Name</span>
+                                (<span th:text="${#numbers.formatCurrency(item.priceAtOrder)}">€5.00</span> each)
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
     </div>
 </div>
 
-<!--<script>-->
-<!--    // You can dynamically set the employee's name using JavaScript-->
-<!--    const employeeNamePlaceholder = document.getElementById('employeeName');-->
-<!--    const loggedInEmployeeName = "Alice Smith"; // Replace with the actual logged-in employee's name-->
-<!--    if (employeeNamePlaceholder) {-->
-<!--        employeeNamePlaceholder.textContent = loggedInEmployeeName;-->
-<!--    }-->
-<!--</script>-->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 </body>
 </html>

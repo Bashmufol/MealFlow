@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${menuItem.id == null ? 'Add New Menu Item' : 'Edit Menu Item'}"></title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/admin/dashboard">MealFlow (Admin)</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn btn-link nav-link">Logout</button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <h1 class="mb-4" th:text="${menuItem.id == null ? 'Add New Menu Item' : 'Edit Menu Item'}"></h1>
+
+  <form th:action="${menuItem.id == null ? @{/admin/menu/save} : @{/admin/menu/update/{id}(id=${menuItem.id})}}" th:object="${menuItem}" method="post">
+    <input type="hidden" th:field="*{id}" />
+
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" class="form-control" id="name" th:field="*{name}" required>
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="price" class="form-label">Price</label>
+      <input type="number" step="0.01" class="form-control" id="price" th:field="*{price}" required>
+    </div>
+    <div class="mb-3">
+      <label for="availableDate" class="form-label">Available Date</label>
+      <input type="date" class="form-control" id="availableDate" th:field="*{availableDate}" required>
+    </div>
+    <div class="mb-3 form-check">
+      <input type="checkbox" class="form-check-input" id="isAvailable" th:field="*{isAvailable}">
+      <label class="form-check-label" for="isAvailable">Is Available</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Save Menu Item</button>
+    <a th:href="@{/admin/dashboard}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

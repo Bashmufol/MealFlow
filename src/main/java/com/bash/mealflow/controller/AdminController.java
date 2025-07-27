@@ -3,6 +3,7 @@ package com.bash.mealflow.controller;
 import com.bash.mealflow.customException.ResourceNotFoundException;
 import com.bash.mealflow.model.MenuItem;
 import com.bash.mealflow.model.Order;
+import com.bash.mealflow.model.OrderStatus;
 import com.bash.mealflow.service.MenuItemService;
 import com.bash.mealflow.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +70,16 @@ public class AdminController {
     }
 
     @PostMapping("/orders/update-status/{orderId}")
-
+    public String updateOrderStatus(@PathVariable Long orderId,
+                                    @RequestParam OrderStatus status,
+                                    RedirectAttributes redirectAttributes){
+        try{
+            orderService.updateOrderStatus(orderId, status);
+            redirectAttributes.addFlashAttribute("successMessage", "Order status updated successfully!");
+        } catch(ResourceNotFoundException e){
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/admin-dashboard";
+    }
 
 }
