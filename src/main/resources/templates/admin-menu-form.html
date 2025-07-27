@@ -33,7 +33,7 @@
 <div class="container mt-4">
   <h1 class="mb-4" th:text="${menuItem.id == null ? 'Add New Menu Item' : 'Edit Menu Item'}"></h1>
 
-  <form th:action="${menuItem.id == null ? @{/admin/menu/save} : @{/admin/menu/update/{id}(id=${menuItem.id})}}" th:object="${menuItem}" method="post">
+  <form th:action="@{${menuItem.id == null ? '/admin/menu/save' : '/admin/menu/update/' + menuItem.id}}" th:object="${menuItem}" method="post">
     <input type="hidden" th:field="*{id}" />
 
     <div class="mb-3">
