@@ -1,5 +1,6 @@
 package com.bash.mealflow.controller;
 
+import com.bash.mealflow.customException.ResourceNotFoundException;
 import com.bash.mealflow.model.MenuItem;
 import com.bash.mealflow.model.Order;
 import com.bash.mealflow.service.MenuItemService;
@@ -7,10 +8,7 @@ import com.bash.mealflow.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -48,5 +46,29 @@ public class AdminController {
         redirectAttributes.addFlashAttribute("successMessage", "Menu item saved successfully");
         return "redirect:/admin/menu/new";
     }
+    @PostMapping("/menu/update/{id}")
+    public String updateMenuItem(@PathVariable Long id, @ModelAttribute MenuItem menuItem, RedirectAttributes redirectAttributes){
+        try{
+            menuItemService.updateMenuItem(id, menuItem);
+            redirectAttributes.addFlashAttribute("successMessage", "Menu item updated successfully");
+        } catch(ResourceNotFoundException e){
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/admin-dashboard";
+    }
+
+    @PostMapping("/menu/delete/{id}")
+    public String deleteMenuItem(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            menuItemService.deleteMenuItem(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Menu item deleted successfully!");
+        } catch (ResourceNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/admin/dashboard";
+    }
+
+    @PostMapping("/orders/update-status/{orderId}")
+
 
 }
