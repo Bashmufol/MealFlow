@@ -18,7 +18,7 @@ public class MenuItemService {
     public List<MenuItem> getAllMenuItems() {
         return menuItemRespository.findAll();
     }
-    public List<MenuItem> getDailyMenuForEmployee(){
+    public List<MenuItem> getDailyMenuForUser(){
         return menuItemRespository.findByAvailableDateAndIsAvailableTrue(LocalDate.now());
     }
     public List<MenuItem> getAllMenuItemForToday(){
