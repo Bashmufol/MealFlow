@@ -32,7 +32,7 @@ public class UserService {
         if(userRepository.findByUsername(email).isPresent()) {
             throw new IllegalArgumentException("Email already exists " + email);
         }
-        if(user.getPassword() == null || user.getPassword().equals(confirmPassword)) {
+        if(user.getPassword() == null || !user.getPassword().equals(confirmPassword)) {
             throw new IllegalArgumentException("Passwords do not match");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
