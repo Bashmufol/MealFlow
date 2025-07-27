@@ -1,4 +1,52 @@
 package com.bash.mealflow.controller;
 
+import com.bash.mealflow.model.MenuItem;
+import com.bash.mealflow.model.Order;
+import com.bash.mealflow.service.MenuItemService;
+import com.bash.mealflow.service.OrderService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Controller
+@RequestMapping("/admin")
+@RequiredArgsConstructor
 public class AdminController {
+    private final MenuItemService menuItemService;
+    private final OrderService orderService;
+
+    @GetMapping("/dashboard")
+    public String adminDashboard(Model model){
+        List<MenuItem> menuItems = menuItemService.getAllMenuItemForToday();
+        model.addAttribute("menuItems", menuItems);
+        List<Order> pendingOrders = orderService.getPendingOrders();
+        model.addAttribute("pendingOrders", pendingOrders);
+        List<Order> allOrders = orderService.getAllOrderForAdmin();
+        model.addAttribute("allOrders", allOrders);
+        return "admin-dashboard";
+    }
+
+    @GetMapping("/menu/new")
+    public String showCreateMenuItemForm(Model model){
+        model.addAttribute("menuItem", new MenuItem());
+        return "admin-menu-form";
+    }
+    @PostMapping("/menu/save")
+    public String saveMenuitem(@ModelAttribute MenuItem menuItem, RedirectAttributes redirectAttributes){
+        if(menuItem.getAvailableDate() == null){
+            menuItem.setAvailableDate(LocalDate.now());
+        }
+        menuItemService.saveMenuItem(menuItem);
+        redirectAttributes.addFlashAttribute("successMessage", "Menu item saved successfully");
+        return "redirect:/admin/menu/new";
+    }
+
 }
