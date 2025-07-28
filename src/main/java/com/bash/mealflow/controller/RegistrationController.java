@@ -28,15 +28,16 @@ public class RegistrationController {
     @PostMapping("/register")
     public String registerUserAccount(@ModelAttribute("user") User user,
                                       @RequestParam String confirmPassword,
+                                      Model model,
                                       RedirectAttributes redirectAttributes) {
         try{
             userService.registerNewUser(user, confirmPassword);
             redirectAttributes.addFlashAttribute("successMessage", "Registration Successful");
             return "redirect:/login";
         } catch (IllegalArgumentException e){
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            model.addAttribute("errorMessage", e.getMessage());
             redirectAttributes.addFlashAttribute("user", user);
-            return "redirect:/register";
+            return "register";
         }
     }
 }

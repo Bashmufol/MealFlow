@@ -54,7 +54,7 @@ public class UserController {
             if (entry.getKey().startsWith("quantity_") && !entry.getValue().isEmpty()) {
                 try {
                     Long menuItemId = Long.parseLong(entry.getKey().replace("quantity_", ""));
-                    Integer quantity = Integer.parseInt(entry.getValue());
+                    int quantity = Integer.parseInt(entry.getValue());
                     if(quantity>0){
                         itemQuantities.put(menuItemId, quantity);
                     }
