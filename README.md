@@ -24,15 +24,13 @@ A full-stack, role-based web application designed to modernize and streamline th
 
 ## 📸 Screenshots
 
-*(This is one of the most important sections. Add your own screenshots here!)*
-
 | Employee Dashboard | Admin Menu Management |
 | :----------------: | :---------------------: |
-| ![Employee Dashboard](https://placehold.co/600x400/333/FFF?text=Employee+Dashboard+Screenshot) | ![Admin Menu Management](https://placehold.co/600x400/333/FFF?text=Admin+Dashboard+Screenshot) |
+| ![User Dashboard](src/main/resources/templates/images/user-dashboard.png) | ![Admin Dashboard](src/main/resources/templates/images/user-dashboard.png) |
 
-| Mobile View | Order History |
-| :----------------: | :---------------------: |
-| ![Mobile View](https://placehold.co/300x500/333/FFF?text=Mobile+View) | ![Order History](https://placehold.co/600x400/333/FFF?text=Order+History+Screenshot) |
+| Mobile View |
+| :----------------: | 
+| ![Mobile View](src/main/resources/templates/images/user-dashboard.png) | 
 
 
 ---
@@ -81,11 +79,11 @@ The application will be available at `http://localhost:8080`.
 You can test the application using the following pre-populated credentials:
 
 * **Employee Account:**
-    * **Username:** `employee@test.com`
+    * **Username:** `user`
     * **Password:** `password`
 * **Admin Account:**
-    * **Username:** `admin@test.com`
-    * **Password:** `adminpass`
+    * **Username:** `admin`
+    * **Password:** `adminPass`
 
 ---
 
