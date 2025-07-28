@@ -26,11 +26,11 @@ A full-stack, role-based web application designed to modernize and streamline th
 
 | Employee Dashboard | Admin Menu Management |
 | :----------------: | :---------------------: |
-| ![Employee Dashboard](https://github.com/Bashmufol/MealFlow/blob/main/src/main/resources/templates/images/user-dashborad-image.png) | ![Admin Menu Management](src/main/resources/templates/images/admin-dashboard-image.png) |
+| ![Employee Dashboard](src/main/resources/templates/images/user-dasboard-image.png) | ![Admin Dashboard](src/main/resources/templates/images/admin-dasboard-image.png) |
 
-| Mobile View | 
-| :----------------: | 
-| ![Mobile View](src/main/resources/templates/images/mobile-view.png) |
+| Mobile View | Order History |
+| :----------------: | :---------------------: |
+| ![Mobile View](src/main/resources/templates/images/mobile-view.png) | ![Order History](src/main/resources/templates/templates/images/mobile-view.png) |
 
 ---
 
