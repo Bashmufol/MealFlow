@@ -45,35 +45,6 @@ A full-stack, role-based web application designed to modernize and streamline th
 
 ---
 
-## 🚀 Setup and Installation
-
-To get a local copy up and running, follow these simple steps.
-
-### Prerequisites
-* JDK 11 or higher
-* Maven
-* A running SQL database instance
-
-### Installation
-1.  **Clone the repo**
-    ```sh
-    git clone [https://github.com/](https://github.com/)[your-username]/[your-repo-name].git
-    ```
-2.  **Navigate to the project directory**
-    ```sh
-    cd [your-repo-name]
-    ```
-3.  **Configure the database**
-    * Open `src/main/resources/application.properties`.
-    * Update the `spring.datasource.url`, `spring.datasource.username`, and `spring.datasource.password` properties to match your local database configuration.
-4.  **Run the application**
-    ```sh
-    mvn spring-boot:run
-    ```
-The application will be available at `http://localhost:8080`.
-
----
-
 ## 🧑‍💻 Usage
 
 You can test the application using the following pre-populated credentials:
