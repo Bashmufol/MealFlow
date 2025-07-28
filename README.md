@@ -24,13 +24,13 @@ A full-stack, role-based web application designed to modernize and streamline th
 
 ## 📸 Screenshots
 
-| Employee Dashboard | Admin Menu Management |
+| User Dashboard | Admin Dashboard |
 | :----------------: | :---------------------: |
-| ![User Dashboard]([src/main/resources/templates/images/user-dashboard.png](https://github.com/Bashmufol/MealFlow/blob/main/src/main/resources/templates/images/user-dashboard.png)) | ![Admin Dashboard]([src/main/resources/templates/images/user-dashboard.png](https://github.com/Bashmufol/MealFlow/blob/main/src/main/resources/templates/images/admin-dashboard.png)) |
+| ![[User Dashboard](https://github.com/Bashmufol/MealFlow/blob/main/src/main/resources/templates/images/user-dashboard.png)] | ![[Admin Dashboard](https://github.com/Bashmufol/MealFlow/blob/main/src/main/resources/templates/images/admin-dashboard.png)] |
 
 | Mobile View |
 | :----------------: | 
-| ![Mobile View]([src/main/resources/templates/images/user-dashboard.png](https://github.com/Bashmufol/MealFlow/blob/main/src/main/resources/templates/images/mobile-view.png)) | 
+| ![[Mobile View](https://github.com/Bashmufol/MealFlow/blob/main/src/main/resources/templates/images/mobile-view.png)]| 
 
 
 ---
