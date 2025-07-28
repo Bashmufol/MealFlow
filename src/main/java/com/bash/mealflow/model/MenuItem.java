@@ -23,5 +23,5 @@ public class MenuItem {
     @Column(name = "available_date")
     private LocalDate availableDate;
     @Column(name = "is_available")
-    private boolean isAvailable;
+    private Boolean isAvailable;
 }

@@ -2,7 +2,7 @@ package com.bash.mealflow.service;
 
 import com.bash.mealflow.customException.ResourceNotFoundException;
 import com.bash.mealflow.model.*;
-import com.bash.mealflow.repository.MenuItemRespository;
+import com.bash.mealflow.repository.MenuItemRepository;
 import com.bash.mealflow.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final MenuItemRespository menuItemRespository;
+    private final MenuItemRepository menuItemRepository;
 
     @Transactional
     public Order placeOrder(User user, Map<Long, Integer> itemQuantity) {
@@ -36,10 +36,10 @@ public class OrderService {
             Long menuItemId = entry.getKey();
             Integer quantity = entry.getValue();
 
-            MenuItem menuItem = menuItemRespository.findById(menuItemId)
+            MenuItem menuItem = menuItemRepository.findById(menuItemId)
                     .orElseThrow(() -> new ResourceNotFoundException("Menu Item not found with id: " + menuItemId));
 
-            if(!menuItem.isAvailable()){
+            if(!menuItem.getIsAvailable()){
                 throw new IllegalStateException("Menu Item " + menuItem.getName() + " is not currently available");
             }
             OrderItem orderItem = new OrderItem();

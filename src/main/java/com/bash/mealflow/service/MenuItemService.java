@@ -2,7 +2,7 @@ package com.bash.mealflow.service;
 
 import com.bash.mealflow.customException.ResourceNotFoundException;
 import com.bash.mealflow.model.MenuItem;
-import com.bash.mealflow.repository.MenuItemRespository;
+import com.bash.mealflow.repository.MenuItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,41 +13,41 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class MenuItemService {
-    private final MenuItemRespository menuItemRespository;
+    private final MenuItemRepository menuItemRepository;
 
     public List<MenuItem> getAllMenuItems() {
-        return menuItemRespository.findAll();
+        return menuItemRepository.findAll();
     }
     public List<MenuItem> getDailyMenuForUser(){
-        return menuItemRespository.findByAvailableDateAndIsAvailableTrue(LocalDate.now());
+        return menuItemRepository.findByAvailableDateAndIsAvailableTrue(LocalDate.now());
     }
     public List<MenuItem> getAllMenuItemForToday(){
-        return menuItemRespository.findByAvailableDate(LocalDate.now());
+        return menuItemRepository.findByAvailableDate(LocalDate.now());
     }
     public Optional<MenuItem> getMenuItemById(Long menuItemId) {
-        return menuItemRespository.findById(menuItemId);
+        return menuItemRepository.findById(menuItemId);
     }
     public MenuItem saveMenuItem(MenuItem menuItem) {
-        return menuItemRespository.save(menuItem);
+        return menuItemRepository.save(menuItem);
     }
     public MenuItem updateMenuItem(Long menuItemId, MenuItem menuItem) {
-        Optional<MenuItem> menuItemOptional = menuItemRespository.findById(menuItemId);
+        Optional<MenuItem> menuItemOptional = menuItemRepository.findById(menuItemId);
         if(menuItemOptional.isPresent()){
             MenuItem existingMenuItem = menuItemOptional.get();
             existingMenuItem.setName(menuItem.getName());
             existingMenuItem.setDescription(menuItem.getDescription());
             existingMenuItem.setPrice(menuItem.getPrice());
             existingMenuItem.setAvailableDate(menuItem.getAvailableDate());
-            existingMenuItem.setAvailable(menuItem.isAvailable());
-            return menuItemRespository.save(existingMenuItem);
+            existingMenuItem.setIsAvailable(menuItem.getIsAvailable());
+            return menuItemRepository.save(existingMenuItem);
         } else {
             throw new ResourceNotFoundException("Cannot find menu item with the id: " + menuItemId);
             }
     }
 
     public void deleteMenuItem(Long menuItemId) {
-        if(menuItemRespository.existsById(menuItemId)) {
-            menuItemRespository.deleteById(menuItemId);
+        if(menuItemRepository.existsById(menuItemId)) {
+            menuItemRepository.deleteById(menuItemId);
         } else  {
             throw new ResourceNotFoundException("Cannot find menu item with the id: " + menuItemId);
         }

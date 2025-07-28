@@ -45,17 +45,26 @@ public class AdminController {
         }
         menuItemService.saveMenuItem(menuItem);
         redirectAttributes.addFlashAttribute("successMessage", "Menu item saved successfully");
-        return "redirect:/admin/menu/new";
+        return "redirect:/admin/dashboard";
     }
     @PostMapping("/menu/update/{id}")
     public String updateMenuItem(@PathVariable Long id, @ModelAttribute MenuItem menuItem, RedirectAttributes redirectAttributes){
         try{
+            if (!id.equals(menuItem.getId())) {
+                throw new IllegalArgumentException("Menu item ID in path does not match ID in form data.");
+            }
             menuItemService.updateMenuItem(id, menuItem);
             redirectAttributes.addFlashAttribute("successMessage", "Menu item updated successfully");
         } catch(ResourceNotFoundException e){
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("menuItem", menuItem);
+            return "redirect:/admin/menu/edit/" + id;
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error updating menu item: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("menuItem", menuItem);
+            return "redirect:/admin/menu/edit/" + id;
         }
-        return "redirect:/admin-dashboard";
+        return "redirect:/admin/dashboard";
     }
 
     @PostMapping("/menu/delete/{id}")
@@ -79,7 +88,7 @@ public class AdminController {
         } catch(ResourceNotFoundException e){
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
-        return "redirect:/admin-dashboard";
+        return "redirect:/admin/dashboard";
     }
 
 }
