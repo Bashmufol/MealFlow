@@ -36,7 +36,7 @@ public class UserController {
         User currentUser = currentUserPrincipal.getUser();
         List<Order> orderHistory = orderService.getOrderHistoryForUser(currentUser);
         model.addAttribute("orderHistory", orderHistory);
-        return "employee-dashboard";
+        return "user-dashboard";
     }
 
     @PostMapping("/place-order")

@@ -2,7 +2,7 @@ package com.bash.mealflow.service;
 
 import com.bash.mealflow.model.Role;
 import com.bash.mealflow.model.User;
-import com.bash.mealflow.repository.UserRepositroy;
+import com.bash.mealflow.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRepositroy userRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     public Optional<User> findByUsername(String username) {
@@ -29,7 +29,7 @@ public class UserService {
         if(userRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("Username already exists " + username);
         }
-        if(userRepository.findByUsername(email).isPresent()) {
+        if(userRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("Email already exists " + email);
         }
         if(user.getPassword() == null || !user.getPassword().equals(confirmPassword)) {
