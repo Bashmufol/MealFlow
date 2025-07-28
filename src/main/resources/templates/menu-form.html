@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${menuItem.id == null ? 'Add New Menu Item' : 'Edit Menu Item'}">Menu Item Form</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          xintegrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body { background-color: #f8f9fa; }
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="form-container">
+        <h2 class="mb-4" th:text="${menuItem.id == null ? 'Add New Menu Item' : 'Edit Menu Item'}">Menu Item Form</h2>
+
+        <!-- Display success/error messages (from RedirectAttributes) -->
+        <div th:if="${successMessage}" class="alert alert-success" role="alert">
+            <span th:text="${successMessage}"></span>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <!-- The form itself -->
+        <form th:action="@{${menuItem.id == null ? '/admin/menu/save' : '/admin/menu/update/' + menuItem.id}}"
+              th:object="${menuItem}" method="post">
+
+            <!-- Hidden input for ID (CRUCIAL for updates) -->
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" th:field="*{name}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="price" class="form-label">Price</label>
+                <input type="number" step="0.01" class="form-control" id="price" th:field="*{price}" required min="0.01">
+            </div>
+
+            <div class="mb-3">
+                <label for="availableDate" class="form-label">Available Date</label>
+                <!-- Use type="date" for a date picker in modern browsers -->
+                <input type="date" class="form-control" id="availableDate" th:field="*{availableDate}" required>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="isAvailable" th:field="*{isAvailable}">
+                <label class="form-check-label" for="isAvailable">Is Available</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" th:text="${menuItem.id == null ? 'Add Menu Item' : 'Update Menu Item'}">Submit</button>
+            <a th:href="@{/admin/dashboard}" class="btn btn-secondary ms-2">Cancel</a>
+        </form>
+    </div>
+</div>
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        xintegrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+</html>
