@@ -1,5 +1,6 @@
 package com.bash.mealflow.config;
 
+import com.bash.mealflow.model.Role;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,10 +20,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         String redirectURL = "/";
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
-        if (authorities.stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN")) ) {
+        if (authorities.stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN")) ) {
             redirectURL = "/admin/dashboard";
         }
-        else if(authorities.stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("USER")) ) {
+        else if(authorities.stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_USER")) ) {
             redirectURL = "/user/dashboard";
         }
         else {
