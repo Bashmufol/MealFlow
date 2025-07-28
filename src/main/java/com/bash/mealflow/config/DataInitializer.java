@@ -15,20 +15,22 @@ public class DataInitializer implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
     @Override
     public void run(String... args) throws Exception {
-        if(userRepository.findByUsername("admin").isPresent()) {
-            System.out.println("No admin user found. Creating default admin user...");
+        if (userRepository.findByUsername("admin").isEmpty()) {
+            System.out.println("No admin found. Creating default admin...");
+
             User adminUser = new User();
             adminUser.setUsername("admin");
-            adminUser.setPassword(passwordEncoder.encode("adminPass"));
             adminUser.setEmail("admin@mealflow.com");
+            adminUser.setPassword(passwordEncoder.encode("adminPass"));
             adminUser.setRoles(Role.ADMIN);
+
             userRepository.save(adminUser);
-            System.out.println("Default admin user created successfully!");
+            System.out.println("Default admin created successfully!");
         } else {
-            System.out.println("Admin user already exists. Skipping creation.");
+            System.out.println("Admin already exists. Skipping creation.");
         }
 
-        if (userRepository.findByUsername("employee").isEmpty()) {
+        if (userRepository.findByUsername("user").isEmpty()) {
             System.out.println("No employee user found. Creating default employee user...");
 
             User employeeUser = new User();
