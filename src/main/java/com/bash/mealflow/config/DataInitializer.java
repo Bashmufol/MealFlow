@@ -44,7 +44,5 @@ public class DataInitializer implements CommandLineRunner {
         } else {
             System.out.println("User already exists. Skipping creation.");
         }
-
-
     }
 }

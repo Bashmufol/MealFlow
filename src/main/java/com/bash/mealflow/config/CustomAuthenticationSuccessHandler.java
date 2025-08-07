@@ -25,7 +25,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             redirectURL = "/user/dashboard";
         }
         else {
-            redirectURL = "/access-denied";
+            redirectURL = "/access-denied"; // Fallback for roles not explicitly handled
         }
         response.sendRedirect(request.getContextPath() + redirectURL);
     }

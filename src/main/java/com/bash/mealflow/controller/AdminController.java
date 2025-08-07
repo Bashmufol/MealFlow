@@ -1,6 +1,7 @@
 package com.bash.mealflow.controller;
 
 import com.bash.mealflow.customException.ResourceNotFoundException;
+import com.bash.mealflow.dto.MenuItemDto;
 import com.bash.mealflow.model.MenuItem;
 import com.bash.mealflow.model.Order;
 import com.bash.mealflow.model.OrderStatus;
@@ -35,33 +36,43 @@ public class AdminController {
 
     @GetMapping("/menu/new")
     public String showCreateMenuItemForm(Model model){
-        model.addAttribute("menuItem", new MenuItem());
+        model.addAttribute("menuItem", new MenuItemDto()); // Use DTO
         return "admin-menu-form";
     }
+
     @PostMapping("/menu/save")
-    public String saveMenuitem(@ModelAttribute MenuItem menuItem, RedirectAttributes redirectAttributes){
-        if(menuItem.getAvailableDate() == null){
-            menuItem.setAvailableDate(LocalDate.now());
-        }
-        menuItemService.saveMenuItem(menuItem);
+    public String saveMenuitem(@ModelAttribute MenuItemDto menuItemDto, RedirectAttributes redirectAttributes){
+        // The service will handle mapping from DTO to entity
+        menuItemService.saveMenuItem(menuItemDto);
         redirectAttributes.addFlashAttribute("successMessage", "Menu item saved successfully");
         return "redirect:/admin/dashboard";
     }
+
+    @GetMapping("/menu/edit/{id}") // Added for editing functionality
+    public String showEditMenuItemForm(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            MenuItemDto menuItemDto = menuItemService.getMenuItemDtoById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Menu Item not found with id: " + id));
+            model.addAttribute("menuItem", menuItemDto);
+            return "admin-menu-form";
+        } catch (ResourceNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/admin/dashboard";
+        }
+    }
+
     @PostMapping("/menu/update/{id}")
-    public String updateMenuItem(@PathVariable Long id, @ModelAttribute MenuItem menuItem, RedirectAttributes redirectAttributes){
+    public String updateMenuItem(@PathVariable Long id, @ModelAttribute MenuItemDto menuItemDto, RedirectAttributes redirectAttributes){
         try{
-            if (!id.equals(menuItem.getId())) {
-                throw new IllegalArgumentException("Menu item ID in path does not match ID in form data.");
-            }
-            menuItemService.updateMenuItem(id, menuItem);
+            // Set ID from path to DTO for consistent update logic
+            menuItemDto.setId(id);
+            menuItemService.updateMenuItem(menuItemDto);
             redirectAttributes.addFlashAttribute("successMessage", "Menu item updated successfully");
         } catch(ResourceNotFoundException e){
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            redirectAttributes.addFlashAttribute("menuItem", menuItem);
-            return "redirect:/admin/menu/edit/" + id;
+            return "redirect:/admin/menu/edit/" + id; // Redirect back to edit with error
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Error updating menu item: " + e.getMessage());
-            redirectAttributes.addFlashAttribute("menuItem", menuItem);
             return "redirect:/admin/menu/edit/" + id;
         }
         return "redirect:/admin/dashboard";
@@ -90,5 +101,4 @@ public class AdminController {
         }
         return "redirect:/admin/dashboard";
     }
-
 }

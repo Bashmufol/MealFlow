@@ -1,5 +1,6 @@
 package com.bash.mealflow.controller;
 
+import com.bash.mealflow.customException.ResourceNotFoundException;
 import com.bash.mealflow.model.MenuItem;
 import com.bash.mealflow.model.Order;
 import com.bash.mealflow.model.User;
@@ -11,10 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
@@ -41,7 +39,7 @@ public class UserController {
 
     @PostMapping("/place-order")
     public String placeOrder(@AuthenticationPrincipal UserPrincipal currentUserPrincipal,
-                             @RequestParam Map<String, String> formData,
+                             @RequestParam Map<String, String> formData, // Keep map for direct item quantities
                              RedirectAttributes redirectAttributes) {
         User currentUser = currentUserPrincipal.getUser();
         if (currentUser == null) {
@@ -55,7 +53,7 @@ public class UserController {
                 try {
                     Long menuItemId = Long.parseLong(entry.getKey().replace("quantity_", ""));
                     int quantity = Integer.parseInt(entry.getValue());
-                    if(quantity>0){
+                    if(quantity > 0){
                         itemQuantities.put(menuItemId, quantity);
                     }
                 } catch(NumberFormatException e){
@@ -66,9 +64,27 @@ public class UserController {
         }
         try{
             orderService.placeOrder(currentUser, itemQuantities);
-            redirectAttributes.addFlashAttribute("successMessage", "Order placed successfully");
+            redirectAttributes.addFlashAttribute("successMessage", "Order placed successfully!");
         } catch(Exception e){
-            redirectAttributes.addFlashAttribute("errorMessage", "Error placing order. " + e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "Error placing order: " + e.getMessage());
+        }
+        return "redirect:/user/dashboard";
+    }
+
+    @PostMapping("/cancel-order/{orderId}")
+    public String cancelOrder(@PathVariable Long orderId,
+                              @AuthenticationPrincipal UserPrincipal currentUserPrincipal,
+                              RedirectAttributes redirectAttributes) {
+        User currentUser = currentUserPrincipal.getUser();
+        if (currentUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "User not found.");
+            return "redirect:/user/dashboard";
+        }
+        try {
+            orderService.cancelOrder(orderId, currentUser);
+            redirectAttributes.addFlashAttribute("successMessage", "Order cancelled successfully!");
+        } catch (ResourceNotFoundException | IllegalArgumentException | IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error cancelling order: " + e.getMessage());
         }
         return "redirect:/user/dashboard";
     }
