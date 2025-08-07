@@ -1,5 +1,6 @@
 package com.bash.mealflow.service;
 
+import com.bash.mealflow.dto.UserRegistrationRequest;
 import com.bash.mealflow.model.Role;
 import com.bash.mealflow.model.User;
 import com.bash.mealflow.repository.UserRepository;
@@ -19,24 +20,36 @@ public class UserService {
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
     public User saveUser(User user) {
         return userRepository.save(user);
     }
+
     @Transactional
-    public User registerNewUser(User user, String confirmPassword) {
-        String username = user.getUsername();
-        String email = user.getEmail();
-        if(userRepository.findByUsername(username).isPresent()) {
-            throw new IllegalArgumentException("Username already exists " + username);
+    public User registerNewUser(UserRegistrationRequest registrationRequest) {
+        String username = registrationRequest.getUsername();
+        String email = registrationRequest.getEmail();
+        String password = registrationRequest.getPassword();
+        String confirmPassword = registrationRequest.getConfirmPassword();
+
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new IllegalArgumentException("Username '" + username + "' already exists.");
         }
-        if(userRepository.findByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("Email already exists " + email);
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("Email '" + email + "' already exists.");
         }
-        if(user.getPassword() == null || !user.getPassword().equals(confirmPassword)) {
-            throw new IllegalArgumentException("Passwords do not match");
+        if (password == null || !password.equals(confirmPassword)) {
+            throw new IllegalArgumentException("Passwords do not match.");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Role.USER);
-        return userRepository.save(user);
+
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setEmail(email);
+        newUser.setPassword(passwordEncoder.encode(password));
+        newUser.setRoles(Role.USER); // Default role for new registrations
+
+        return userRepository.save(newUser);
     }
 }

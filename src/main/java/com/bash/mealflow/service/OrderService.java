@@ -24,7 +24,7 @@ public class OrderService {
     @Transactional
     public Order placeOrder(User user, Map<Long, Integer> itemQuantity) {
         if(itemQuantity == null || itemQuantity.isEmpty()) {
-            throw new IllegalArgumentException("Order cannot be empty");
+            throw new IllegalArgumentException("Order cannot be empty.");
         }
         Order order = new Order();
         order.setUser(user);
@@ -32,23 +32,33 @@ public class OrderService {
         order.setStatus(OrderStatus.ORDERED);
         BigDecimal totalAmount  = BigDecimal.ZERO;
 
-        for(Map.Entry<Long, Integer> entry : itemQuantity.entrySet()) {
-            Long menuItemId = entry.getKey();
-            Integer quantity = entry.getValue();
+        // Collect OrderItems before adding to order to ensure all menu items are valid and available
+        List<OrderItem> orderItems = itemQuantity.entrySet().stream()
+                .map(entry -> {
+                    Long menuItemId = entry.getKey();
+                    Integer quantity = entry.getValue();
 
-            MenuItem menuItem = menuItemRepository.findById(menuItemId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Menu Item not found with id: " + menuItemId));
+                    MenuItem menuItem = menuItemRepository.findById(menuItemId)
+                            .orElseThrow(() -> new ResourceNotFoundException("Menu Item not found with id: " + menuItemId));
 
-            if(!menuItem.getIsAvailable()){
-                throw new IllegalStateException("Menu Item " + menuItem.getName() + " is not currently available");
-            }
-            OrderItem orderItem = new OrderItem();
-            orderItem.setMenuItem(menuItem);
-            orderItem.setQuantity(quantity);
-            orderItem.setOrder(order);
-            orderItem.setPriceAtOrder(menuItem.getPrice());
-            totalAmount = totalAmount.add(menuItem.getPrice().multiply(BigDecimal.valueOf(quantity)));
+                    if(!menuItem.getIsAvailable()){
+                        throw new IllegalStateException("Menu Item '" + menuItem.getName() + "' is not currently available.");
+                    }
+
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.setMenuItem(menuItem);
+                    orderItem.setQuantity(quantity);
+                    orderItem.setPriceAtOrder(menuItem.getPrice()); // Price captured at order time
+                    return orderItem;
+                })
+                .collect(Collectors.toList());
+
+        // Add order items to the order and calculate total amount
+        for(OrderItem orderItem : orderItems) {
+            order.addOrderItem(orderItem);
+            totalAmount = totalAmount.add(orderItem.getPriceAtOrder().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
         }
+
         order.setTotalAmount(totalAmount);
         return orderRepository.save(order);
     }
@@ -60,27 +70,45 @@ public class OrderService {
     public List<Order> getAllOrderForAdmin(){
         return orderRepository.findAllByOrderByOrderDateDesc();
     }
+
     public List<Order> getPendingOrders(){
-//        Fetch orders that are 'ORDERED' or 'IN_PROGRESS'
+        // Fetch orders that are 'ORDERED' or 'IN_PROGRESS'
         List<Order> ordered = orderRepository.findByStatusOrderByOrderDateAsc(OrderStatus.ORDERED);
         List<Order> inProgress = orderRepository.findByStatusOrderByOrderDateAsc(OrderStatus.IN_PROGRESS);
         ordered.addAll(inProgress);
+        // Ensure consistent sorting
         return ordered.stream()
                 .sorted((o1, o2) -> o1.getOrderDate().compareTo(o2.getOrderDate()))
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public Order updateOrderStatus(Long orderId, OrderStatus newStatus){
         return orderRepository.findById(orderId)
                 .map(order -> {
                     order.setStatus(newStatus);
                     return orderRepository.save(order);
                 }).orElseThrow(() -> new ResourceNotFoundException("Order Not Found with id: " + orderId));
-
     }
 
     public Optional<Order> getOrderById(Long orderId){
         return orderRepository.findById(orderId);
     }
 
+    @Transactional
+    public void cancelOrder(Long orderId, User user) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
+
+        if (!order.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("You are not authorized to cancel this order.");
+        }
+
+        if (order.getStatus() != OrderStatus.ORDERED) {
+            throw new IllegalStateException("Order cannot be cancelled. It is already " + order.getStatus());
+        }
+
+        // If the order is 'ORDERED' and belongs to the user, delete it
+        orderRepository.delete(order);
+    }
 }

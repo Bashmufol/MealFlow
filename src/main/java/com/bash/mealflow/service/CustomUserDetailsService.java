@@ -1,6 +1,5 @@
 package com.bash.mealflow.service;
 
-
 import com.bash.mealflow.model.User;
 import com.bash.mealflow.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
