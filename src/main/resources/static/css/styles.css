@@ -1,0 +1,71 @@
+/* src/main/resources/static/css/styles.css */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa; /* Light background */
+    color: #333;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.card {
+    border-radius: 0.75rem; /* Slightly more rounded cards */
+    border: none; /* Remove default card border */
+    overflow: hidden; /* Ensures content respects border-radius */
+}
+
+.card-header {
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+    background-color: #007bff; /* Primary color */
+    color: white;
+    font-weight: 600;
+    padding: 1.25rem 1.5rem;
+}
+
+.card-header.bg-info {
+    background-color: #17a2b8 !important; /* Info color */
+}
+
+.card-header.bg-secondary {
+    background-color: #6c757d !important; /* Secondary color */
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+.alert {
+    border-radius: 0.5rem;
+}
+
+/* Specific styles for badge colors based on status */
+.badge.bg-secondary { background-color: #6c757d !important; } /* Ordered */
+.badge.bg-warning { background-color: #ffc107 !important; color: #333 !important; } /* In Progress */
+.badge.bg-success { background-color: #28a745 !important; } /* Ready for Pickup */
+.badge.bg-primary { background-color: #007bff !important; } /* Completed */
+.badge.bg-danger { background-color: #dc3545 !important; } /* Cancelled */
+
+/* General form styling */
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+
+/* Google Login Button Styling (optional, for the icon) */
+.btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}

@@ -4,13 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MealFlow Register</title>
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link th:href="@{/css/styles.css}" rel="stylesheet">
   <style>
-    body {
-      background-color: #f8f9fa;
-    }
     .registration-container {
       max-width: 500px;
       margin: 50px auto;
@@ -24,43 +21,41 @@
 <body>
 <div class="container">
   <div class="registration-container">
-    <h2 class="text-center mb-4">Register for MealFlow</h2>
+    <h2 class="text-center mb-4">📝 Register for MealFlow</h2>
 
-    <!-- Display success/error messages -->
-    <div th:if="${successMessage}" class="alert alert-success" role="alert">
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
       <span th:text="${successMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
       <span th:text="${errorMessage}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
-    <!-- Form binds to the 'user' object -->
-    <form th:action="@{/register}" th:object="${user}" method="post">
+    <form th:action="@{/register}" th:object="${userRegistrationRequest}" method="post">
       <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
+        <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
         <input type="text" class="form-control" id="username" th:field="*{username}" required>
       </div>
       <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
+        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
         <input type="email" class="form-control" id="email" th:field="*{email}" required>
       </div>
       <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
+        <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
         <input type="password" class="form-control" id="password" th:field="*{password}" required>
       </div>
       <div class="mb-3">
-        <label for="confirmPassword" class="form-label">Confirm Password</label>
-        <!-- confirmPassword is a separate @RequestParam, so no th:field -->
-        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+        <label for="confirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+        <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" required>
       </div>
       <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-primary">Register</button>
+        <button type="submit" class="btn btn-primary btn-lg">Register</button>
       </div>
       <p class="text-center mt-3">Already have an account? <a th:href="@{/login}">Login here</a></p>
     </form>
   </div>
 </div>
-<!-- Bootstrap Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
