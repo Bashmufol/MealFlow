@@ -1,7 +1,5 @@
 package com.bash.mealflow.config;
 
-import com.bash.mealflow.model.Role;
-import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
