@@ -42,6 +42,7 @@ public class AdminController {
 
     @PostMapping("/menu/save")
     public String saveMenuitem(@ModelAttribute MenuItemDto menuItemDto, RedirectAttributes redirectAttributes){
+        menuItemDto.setAvailableDate(LocalDate.now());
         // The service will handle mapping from DTO to entity
         menuItemService.saveMenuItem(menuItemDto);
         redirectAttributes.addFlashAttribute("successMessage", "Menu item saved successfully");
@@ -66,6 +67,7 @@ public class AdminController {
         try{
             // Set ID from path to DTO for consistent update logic
             menuItemDto.setId(id);
+            menuItemDto.setAvailableDate(LocalDate.now());
             menuItemService.updateMenuItem(menuItemDto);
             redirectAttributes.addFlashAttribute("successMessage", "Menu item updated successfully");
         } catch(ResourceNotFoundException e){
