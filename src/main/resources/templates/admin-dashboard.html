@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard - MealFlow</title>
+  <title>Admin Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link th:href="@{/css/styles.css}" rel="stylesheet">
@@ -12,7 +12,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
   <div class="container-fluid">
-    <a class="navbar-brand fw-bold" href="/admin/dashboard">🍽️ MealFlow (Admin)</a>
+    <a class="navbar-brand fw-bold" href="/admin/dashboard">MealFlow (Admin)</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -47,7 +47,7 @@
     <div class="col-md-6 mb-4">
       <div class="card shadow-sm h-100">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-          <h4 class="mb-0">🍜 Menu Management (Today's Menu)</h4>
+          <h4 class="mb-0">Menu Management (Today's Menu)</h4>
           <a th:href="@{/admin/menu/new}" class="btn btn-light btn-sm">Add New Item</a>
         </div>
         <div class="card-body">
@@ -59,7 +59,7 @@
               <div class="flex-grow-1 me-2">
                 <h5 class="mb-0 text-dark" th:text="${item.name}">Dish Name</h5>
                 <small class="text-muted" th:text="${item.description}">Description</small><br>
-                <span class="fw-bold text-success" th:text="${#numbers.formatCurrency(item.price)}">€10.00</span>
+                <span class="fw-bold text-success" th:text="${#numbers.formatCurrency(item.price)}">₦10.00</span>
                 <span th:if="${!item.isAvailable}" class="badge bg-warning text-dark ms-2">Not Available</span>
                 <span th:if="${item.isAvailable}" class="badge bg-success ms-2">Available</span>
               </div>
@@ -78,7 +78,7 @@
     <div class="col-md-6 mb-4">
       <div class="card shadow-sm h-100">
         <div class="card-header bg-info text-white">
-          <h4 class="mb-0">⏳ Pending Orders</h4>
+          <h4 class="mb-0">Pending Orders</h4>
         </div>
         <div class="card-body">
           <div th:if="${#lists.isEmpty(pendingOrders)}" class="alert alert-info text-center">
@@ -90,13 +90,13 @@
               <span th:classappend="${order.status == 'ORDERED' ? 'bg-secondary' : (order.status == 'IN_PROGRESS' ? 'bg-warning' : 'bg-success')}" class="badge" th:text="${order.status}">ORDERED</span>
             </div>
             <small class="text-muted mb-2">Ordered on: <span th:text="${#temporals.format(order.orderDate, 'dd MMM yyyy HH:mm')}"></span></small>
-            <p class="fw-bold mb-1">Total: <span class="text-success" th:text="${#numbers.formatCurrency(order.totalAmount)}">€0.00</span></p>
+            <p class="fw-bold mb-1">Total: <span class="text-success" th:text="${#numbers.formatCurrency(order.totalAmount)}">₦0.00</span></p>
             <div class="mb-2">
               <strong>Items:</strong>
               <ul class="list-unstyled mb-0 ms-3">
                 <li th:each="item : ${order.orderItems}">
                   <span th:text="${item.quantity}">2</span> x <span th:text="${item.menuItem.name}">Item Name</span>
-                  (<span th:text="${#numbers.formatCurrency(item.priceAtOrder)}">€5.00</span> each)
+                  (<span th:text="${#numbers.formatCurrency(item.priceAtOrder)}">₦5.00</span> each)
                 </li>
               </ul>
             </div>
@@ -118,7 +118,7 @@
 
   <div class="card shadow-sm mb-4">
     <div class="card-header bg-secondary text-white">
-      <h4 class="mb-0">📜 All Orders History</h4>
+      <h4 class="mb-0">All Orders History</h4>
     </div>
     <div class="card-body">
       <div th:if="${#lists.isEmpty(allOrders)}" class="alert alert-info text-center">

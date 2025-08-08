@@ -12,7 +12,7 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="/user/dashboard">🍽️ MealFlow (Employee)</a>
+        <a class="navbar-brand fw-bold" href="/user/dashboard"> MealFlow (Employee)</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -47,7 +47,7 @@
         <div class="col-md-6 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">🍲 Today's Menu</h4>
+                    <h4 class="mb-0"> Today's Menu</h4>
                 </div>
                 <div class="card-body">
                     <form th:action="@{/user/place-order}" method="post">
@@ -61,7 +61,7 @@
                                     <small class="text-muted" th:text="${item.description}">Description</small>
                                 </div>
                                 <div class="text-end">
-                                    <span class="fw-bold text-success me-2" th:text="${#numbers.formatCurrency(item.price)}">€10.00</span>
+                                    <span class="fw-bold text-success me-2" th:text="${#numbers.formatCurrency(item.price)}">₦10.00</span>
                                     <input type="number" th:name="'quantity_' + ${item.id}" value="0" min="0" class="form-control form-control-sm d-inline-block ms-2" style="width: 70px;">
                                 </div>
                             </div>
@@ -77,7 +77,7 @@
         <div class="col-md-6 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-info text-white">
-                    <h4 class="mb-0">Your Order History 📜</h4>
+                    <h4 class="mb-0">Your Order History</h4>
                 </div>
                 <div class="card-body">
                     <div th:if="${#lists.isEmpty(orderHistory)}" class="alert alert-info text-center">
@@ -90,11 +90,11 @@
                                   class="badge" th:text="${order.status}">ORDERED</span>
                         </div>
                         <small class="text-muted mb-2">Ordered on: <span th:text="${#temporals.format(order.orderDate, 'dd MMM yyyy HH:mm')}"></span></small>
-                        <p class="fw-bold mb-1">Total: <span class="text-success" th:text="${#numbers.formatCurrency(order.totalAmount)}">€0.00</span></p>
+                        <p class="fw-bold mb-1">Total: <span class="text-success" th:text="${#numbers.formatCurrency(order.totalAmount)}">₦0.00</span></p>
                         <ul class="list-unstyled mb-0 ms-3">
                             <li th:each="item : ${order.orderItems}">
                                 <span th:text="${item.quantity}">2</span> x <span th:text="${item.menuItem.name}">Item Name</span>
-                                (<span th:text="${#numbers.formatCurrency(item.priceAtOrder)}">€5.00</span> each)
+                                (<span th:text="${#numbers.formatCurrency(item.priceAtOrder)}">₦5.00</span> each)
                             </li>
                         </ul>
                         <div class="mt-2">

@@ -21,7 +21,7 @@
 <body>
 <div class="container">
     <div class="login-container">
-        <h2 class="text-center mb-4">🚪 Login to MealFlow</h2>
+        <h2 class="text-center mb-4">Login to MealFlow</h2>
         <div th:if="${param.error}" class="alert alert-danger" role="alert">
             Invalid username or password.
         </div>
@@ -48,13 +48,7 @@
             </div>
         </form>
         <p class="text-center mt-3">Don't have an account? <a th:href="@{/register}">Register here</a></p>
-        <hr class="my-4">
-        <div class="d-grid">
-            <a th:href="@{/oauth2/authorization/google}" class="btn btn-outline-danger">
-                <img th:src="@{/images/google_icon.png}" alt="Google icon" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 8px;">
-                Login with Google
-            </a>
-        </div>
+        
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
