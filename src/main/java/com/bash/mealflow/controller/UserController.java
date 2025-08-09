@@ -31,6 +31,8 @@ public class UserController {
     public String UserDashboard(@AuthenticationPrincipal UserPrincipal currentUserPrincipal, Model model){
         List<MenuItem> dailyMenu = menuItemService.getDailyMenuForUser();
         model.addAttribute("menuItems", dailyMenu);
+
+        // Fetch and display the authenticated user's order history.
         User currentUser = currentUserPrincipal.getUser();
         List<Order> orderHistory = orderService.getOrderHistoryForUser(currentUser);
         model.addAttribute("orderHistory", orderHistory);
@@ -39,7 +41,7 @@ public class UserController {
 
     @PostMapping("/place-order")
     public String placeOrder(@AuthenticationPrincipal UserPrincipal currentUserPrincipal,
-                             @RequestParam Map<String, String> formData, // Keep map for direct item quantities
+                             @RequestParam Map<String, String> formData, // Captures all form data as a map.
                              RedirectAttributes redirectAttributes) {
         User currentUser = currentUserPrincipal.getUser();
         if (currentUser == null) {
@@ -48,6 +50,7 @@ public class UserController {
         }
 
         Map<Long, Integer> itemQuantities = new HashMap<>();
+        // Parse quantities for each menu item from the form data.
         for (Map.Entry<String, String> entry : formData.entrySet()) {
             if (entry.getKey().startsWith("quantity_") && !entry.getValue().isEmpty()) {
                 try {
@@ -81,6 +84,7 @@ public class UserController {
             return "redirect:/user/dashboard";
         }
         try {
+            // Attempt to cancel the order, ensuring it belongs to the current user.
             orderService.cancelOrder(orderId, currentUser);
             redirectAttributes.addFlashAttribute("successMessage", "Order cancelled successfully!");
         } catch (ResourceNotFoundException | IllegalArgumentException | IllegalStateException e) {

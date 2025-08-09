@@ -19,44 +19,53 @@ public class MenuItemService {
     public List<MenuItem> getAllMenuItems() {
         return menuItemRepository.findAll();
     }
+
     public List<MenuItem> getDailyMenuForUser(){
+        // Fetches menu items available for today and marked as 'isAvailable = true'.
         return menuItemRepository.findByAvailableDateAndIsAvailableTrue(LocalDate.now());
     }
+
     public List<MenuItem> getAllMenuItemForToday(){
+        // Retrieves all menu items set for the current day, regardless of availability status.
         return menuItemRepository.findByAvailableDate(LocalDate.now());
     }
+
     public Optional<MenuItem> getMenuItemById(Long menuItemId) {
         return menuItemRepository.findById(menuItemId);
     }
+
     // New method to get MenuItemDto
     public Optional<MenuItemDto> getMenuItemDtoById(Long menuItemId) {
+        // Maps the found MenuItem entity to its DTO representation.
         return menuItemRepository.findById(menuItemId).map(MenuItemDto::fromEntity);
     }
 
     // Save using DTO
-    public MenuItem saveMenuItem(MenuItemDto menuItemDto) {
+    public void saveMenuItem(MenuItemDto menuItemDto) {
         MenuItem menuItem = menuItemDto.toEntity();
+        // Ensure default values are set if not provided by the DTO.
         if(menuItem.getAvailableDate() == null){
             menuItem.setAvailableDate(LocalDate.now());
         }
         if(menuItem.getIsAvailable() == null){
             menuItem.setIsAvailable(true); // Default to available
         }
-        return menuItemRepository.save(menuItem);
+        menuItemRepository.save(menuItem);
     }
 
     // Update using DTO
-    public MenuItem updateMenuItem(MenuItemDto menuItemDto) {
+    public void updateMenuItem(MenuItemDto menuItemDto) {
         Long menuItemId = menuItemDto.getId();
         Optional<MenuItem> menuItemOptional = menuItemRepository.findById(menuItemId);
         if(menuItemOptional.isPresent()){
             MenuItem existingMenuItem = menuItemOptional.get();
+            // Update fields of the existing entity from the DTO.
             existingMenuItem.setName(menuItemDto.getName());
             existingMenuItem.setDescription(menuItemDto.getDescription());
             existingMenuItem.setPrice(menuItemDto.getPrice());
             existingMenuItem.setAvailableDate(menuItemDto.getAvailableDate());
             existingMenuItem.setIsAvailable(menuItemDto.getIsAvailable());
-            return menuItemRepository.save(existingMenuItem);
+            menuItemRepository.save(existingMenuItem);
         } else {
             throw new ResourceNotFoundException("Cannot find menu item with the id: " + menuItemId);
         }

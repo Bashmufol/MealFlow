@@ -20,26 +20,30 @@ public class UserService {
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
     public User saveUser(User user) {
         return userRepository.save(user);
     }
 
-    @Transactional
-    public User registerNewUser(UserRegistrationRequest registrationRequest) {
+    @Transactional // Ensures the entire method executes within a single transaction.
+    public void registerNewUser(UserRegistrationRequest registrationRequest) {
         String username = registrationRequest.getUsername();
         String email = registrationRequest.getEmail();
         String password = registrationRequest.getPassword();
         String confirmPassword = registrationRequest.getConfirmPassword();
 
+        // Validate if username or email already exist.
         if (userRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("Username '" + username + "' already exists.");
         }
         if (userRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("Email '" + email + "' already exists.");
         }
+        // Validate password match.
         if (password == null || !password.equals(confirmPassword)) {
             throw new IllegalArgumentException("Passwords do not match.");
         }
@@ -47,9 +51,10 @@ public class UserService {
         User newUser = new User();
         newUser.setUsername(username);
         newUser.setEmail(email);
+        // Encode password before saving for security.
         newUser.setPassword(passwordEncoder.encode(password));
-        newUser.setRoles(Role.USER); // Default role for new registrations
+        newUser.setRoles(Role.USER); // Assign default role for new users.
 
-        return userRepository.save(newUser);
+        userRepository.save(newUser);
     }
 }

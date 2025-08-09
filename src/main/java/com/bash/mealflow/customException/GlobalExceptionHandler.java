@@ -12,9 +12,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
 
-@ControllerAdvice
+@ControllerAdvice // Enables global exception handling across all controllers
 public class GlobalExceptionHandler {
-
+    // Handlers for API (JSON) responses
     @ExceptionHandler(value = ResourceNotFoundException.class, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, status);
     }
 
-    @ExceptionHandler(value = Exception.class, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ExceptionHandler(value = Exception.class, produces = MediaType.APPLICATION_JSON_VALUE) // Catch-all for any unhandled exceptions.
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         ErrorResponse errorResponse = new ErrorResponse(
@@ -93,10 +93,10 @@ public class GlobalExceptionHandler {
         return mav;
     }
 
-    // Handles IllegalArgumentException for browser requests
+    // Handlers for HTML (Thymeleaf) views - for browser requests
     @ExceptionHandler(value = IllegalArgumentException.class, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView handleIllegalArgumentHtml(IllegalArgumentException ex, HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("error/400"); // Path to 400.html Thymeleaf template
+        ModelAndView mav = new ModelAndView("error/400"); // Renders specific error page.
         mav.addObject("errorMessage", ex.getMessage());
         mav.addObject("status", HttpStatus.BAD_REQUEST.value());
         mav.addObject("error", HttpStatus.BAD_REQUEST.getReasonPhrase());
@@ -104,10 +104,10 @@ public class GlobalExceptionHandler {
         return mav;
     }
 
-    // Handles IllegalStateException for browser requests (prefers text/html)
+
     @ExceptionHandler(value = IllegalStateException.class, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView handleIllegalStateHtml(IllegalStateException ex, HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("error/409"); // Reusing 400 for now, or create error/409.html
+        ModelAndView mav = new ModelAndView("error/409");
         mav.addObject("errorMessage", ex.getMessage());
         mav.addObject("status", HttpStatus.BAD_REQUEST.value());
         mav.addObject("error", HttpStatus.BAD_REQUEST.getReasonPhrase());
@@ -115,7 +115,7 @@ public class GlobalExceptionHandler {
         return mav;
     }
 
-    // Handles UsernameNotFoundException for browser requests (prefers text/html)
+
     @ExceptionHandler(value = UsernameNotFoundException.class, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView handleUsernameNotFoundHtml(UsernameNotFoundException ex, HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("error/400");

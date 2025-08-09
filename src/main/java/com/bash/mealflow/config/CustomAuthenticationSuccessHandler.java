@@ -1,6 +1,5 @@
 package com.bash.mealflow.config;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -18,6 +17,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         String redirectURL = "/";
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
+        // Redirect based on user roles after successful authentication.
         if (authorities.stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN")) ) {
             redirectURL = "/admin/dashboard";
         }
@@ -25,7 +25,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             redirectURL = "/user/dashboard";
         }
         else {
-            redirectURL = "/access-denied"; // Fallback for roles not explicitly handled
+            redirectURL = "/access-denied"; // // Handle unexpected roles.
         }
         response.sendRedirect(request.getContextPath() + redirectURL);
     }

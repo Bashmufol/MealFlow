@@ -17,7 +17,6 @@ public class MenuItemDto {
     private String name;
     private String description;
     private BigDecimal price;
-    @DateTimeFormat(pattern = "yyyy-MM-dd") // Format for Thymeleaf date input
     private LocalDate availableDate;
     private Boolean isAvailable;
 
@@ -36,7 +35,7 @@ public class MenuItemDto {
 
     // Helper method to convert MenuItemDto to MenuItem (for saving/updating)
     public MenuItem toEntity() {
-        com.bash.mealflow.model.MenuItem menuItem = new com.bash.mealflow.model.MenuItem();
+        MenuItem menuItem = new MenuItem();
         menuItem.setId(this.id);
         menuItem.setName(this.name);
         menuItem.setDescription(this.description);

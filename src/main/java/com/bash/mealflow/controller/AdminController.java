@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -27,29 +28,34 @@ public class AdminController {
     public String adminDashboard(Model model){
         List<MenuItem> menuItems = menuItemService.getAllMenuItemForToday();
         model.addAttribute("menuItems", menuItems);
-        List<Order> pendingOrders = orderService.getPendingOrders();
-        model.addAttribute("pendingOrders", pendingOrders);
+
+        // Fetch all orders and then filter for pending (non-completed) orders for display.
         List<Order> allOrders = orderService.getAllOrderForAdmin();
-        model.addAttribute("allOrders", allOrders);
+        List<Order> pendingOrders = allOrders.stream()
+                .filter(order -> order.getStatus() != OrderStatus.COMPLETED)
+                .collect(Collectors.toList());
+
+        model.addAttribute("pendingOrders", pendingOrders);
+        model.addAttribute("allOrders", allOrders); // All orders for historical view.
+
         return "admin-dashboard";
     }
 
     @GetMapping("/menu/new")
     public String showCreateMenuItemForm(Model model){
-        model.addAttribute("menuItem", new MenuItemDto()); // Use DTO
+        model.addAttribute("menuItem", new MenuItemDto());
         return "admin-menu-form";
     }
 
     @PostMapping("/menu/save")
     public String saveMenuitem(@ModelAttribute MenuItemDto menuItemDto, RedirectAttributes redirectAttributes){
         menuItemDto.setAvailableDate(LocalDate.now());
-        // The service will handle mapping from DTO to entity
         menuItemService.saveMenuItem(menuItemDto);
         redirectAttributes.addFlashAttribute("successMessage", "Menu item saved successfully");
         return "redirect:/admin/dashboard";
     }
 
-    @GetMapping("/menu/edit/{id}") // Added for editing functionality
+    @GetMapping("/menu/edit/{id}")
     public String showEditMenuItemForm(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         try {
             MenuItemDto menuItemDto = menuItemService.getMenuItemDtoById(id)
@@ -65,14 +71,14 @@ public class AdminController {
     @PostMapping("/menu/update/{id}")
     public String updateMenuItem(@PathVariable Long id, @ModelAttribute MenuItemDto menuItemDto, RedirectAttributes redirectAttributes){
         try{
-            // Set ID from path to DTO for consistent update logic
             menuItemDto.setId(id);
+            // Automatically set available date to current day upon update.
             menuItemDto.setAvailableDate(LocalDate.now());
             menuItemService.updateMenuItem(menuItemDto);
             redirectAttributes.addFlashAttribute("successMessage", "Menu item updated successfully");
         } catch(ResourceNotFoundException e){
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/admin/menu/edit/" + id; // Redirect back to edit with error
+            return "redirect:/admin/menu/edit/" + id;
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Error updating menu item: " + e.getMessage());
             return "redirect:/admin/menu/edit/" + id;

@@ -22,30 +22,31 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorize -> authorize
+                        // Allow unauthenticated access to static resources and public pages.
                         .requestMatchers("/css/**", "/js/**", "/", "/webjars/**", "/images/**", "/login", "/register").permitAll()
+                        // Define access rules for user and admin specific paths.
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // All other requests require authentication.
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
+                        // Custom handler for dynamic post-login redirection based on roles.
                         .successHandler(customAuthenticationSuccessHandler)
-//                        .defaultSuccessUrl("/user/dashboard", true)
                         .permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
                         .permitAll())
                 .exceptionHandling(exception -> exception
+                        // Redirect to a custom page on access denied.
                         .accessDeniedPage("/access-denied"))
-
                 .build();
-
-
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        // BCrypt for secure password hashing.
         return new BCryptPasswordEncoder();
     }
 }

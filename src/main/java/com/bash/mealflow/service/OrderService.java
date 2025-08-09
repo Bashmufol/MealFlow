@@ -22,7 +22,7 @@ public class OrderService {
     private final MenuItemRepository menuItemRepository;
 
     @Transactional
-    public Order placeOrder(User user, Map<Long, Integer> itemQuantity) {
+    public void placeOrder(User user, Map<Long, Integer> itemQuantity) {
         if(itemQuantity == null || itemQuantity.isEmpty()) {
             throw new IllegalArgumentException("Order cannot be empty.");
         }
@@ -60,7 +60,7 @@ public class OrderService {
         }
 
         order.setTotalAmount(totalAmount);
-        return orderRepository.save(order);
+        orderRepository.save(order);
     }
 
     public List<Order> getOrderHistoryForUser(User user) {
@@ -83,8 +83,8 @@ public class OrderService {
     }
 
     @Transactional
-    public Order updateOrderStatus(Long orderId, OrderStatus newStatus){
-        return orderRepository.findById(orderId)
+    public void updateOrderStatus(Long orderId, OrderStatus newStatus){
+        orderRepository.findById(orderId)
                 .map(order -> {
                     order.setStatus(newStatus);
                     return orderRepository.save(order);
