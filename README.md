@@ -26,7 +26,7 @@ A full-stack, role-based web application designed to modernize and streamline th
 
 | Employee Dashboard | Admin Menu Management |
 | :----------------: | :---------------------: |
-| ![Employee Dashboard](src/main/resources/templates/images/user-dasboard-image.png) | ![Admin Dashboard](src/main/resources/templates/images/admin-dasboard-image.png) |
+| ![Employee Dashboard](src/main/resources/templates/images/user-dashboard-image.png) | ![Admin Dashboard](src/main/resources/templates/images/admin-dashboard-image.png) |
 
 | Mobile View | Order History |
 | :----------------: | :---------------------: |
